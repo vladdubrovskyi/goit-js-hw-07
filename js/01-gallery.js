@@ -26,6 +26,7 @@ function createGalleryMarkup(items) {
 galleryContainer.insertAdjacentHTML("beforeend", galleryMarkup);
 
 galleryContainer.addEventListener("click", onGalleryClick);
+let instance;
 
 function onGalleryClick(evt) {
   evt.preventDefault();
@@ -33,11 +34,25 @@ function onGalleryClick(evt) {
     return;
   }
 
-  const instance = basicLightbox.create(
+  instance = basicLightbox.create(
     `<img src="${evt.target.getAttribute("data-source")}" alt="${
       evt.target.alt
     }" width="800" height="600">`
   );
 
   instance.show();
+  addEscapeListener();
+}
+
+function onEscapeClose(evt) {
+  if (evt.code !== "Escape") {
+    return;
+  }
+
+  instance.close();
+  window.removeEventListener("keyup", addEventListener);
+}
+
+function addEscapeListener() {
+  window.addEventListener("keyup", onEscapeClose);
 }
